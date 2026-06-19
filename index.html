@@ -1,477 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rizki Nur Fadilah — Virtual Assistant</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy: #0f2044; --blue: #1a4fd6; --blue-mid: #2d6be4;
-    --blue-light: #e8f0fd; --blue-pale: #f4f7fe; --accent: #4f8ef7;
-    --white: #ffffff; --text: #1a2340; --text-muted: #5a6a8a; --border: #dce6f7;
-  }
-  html { scroll-behavior: smooth; }
-  body { font-family: "Plus Jakarta Sans", sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
-
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 5%; height: 64px;
-    background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo { font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
-  .nav-logo span { color: var(--blue); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a { text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
-  .nav-links a:hover { color: var(--blue); }
-  .nav-cta { background: var(--blue); color: white !important; padding: 0.5rem 1.25rem; border-radius: 100px; font-weight: 600 !important; }
-  .nav-cta:hover { background: var(--navy) !important; }
-
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 64px 8% 0;
-    background: var(--blue-pale);
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: ""; position: absolute; top: -200px; right: -200px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-text { padding-right: 4rem; }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--blue-light); color: var(--blue);
-    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
-  }
-  .hero-eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--blue); border-radius: 50%; }
-  .hero h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: var(--navy); margin-bottom: 0.75rem; }
-  .hero h1 em { font-family: "Lora", serif; font-style: italic; color: var(--blue); font-weight: 400; }
-  .hero-tagline { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 420px; line-height: 1.7; }
-  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--blue); color: white; padding: 0.85rem 1.75rem;
-    border-radius: 100px; font-weight: 700; font-size: 0.9rem;
-    text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 20px rgba(26,79,214,0.3);
-  }
-  .btn-primary:hover { background: var(--navy); transform: translateY(-2px); }
-  .btn-secondary {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: transparent; color: var(--navy); padding: 0.85rem 1.75rem;
-    border-radius: 100px; font-weight: 600; font-size: 0.9rem;
-    text-decoration: none; border: 2px solid var(--border); transition: all 0.2s;
-  }
-  .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
-
-  .hero-image {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
-    padding-top: 64px;
-  }
-  .hero-image img {
-    height: calc(100vh - 64px);
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    object-position: top center;
-    filter: drop-shadow(0 20px 60px rgba(15,32,68,0.15));
-  }
-
-  .stats-bar { background: var(--navy); padding: 1.5rem 8%; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
-  .stat { text-align: center; color: white; }
-  .stat-number { font-size: 1.6rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
-  .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
-
-  section { padding: 5rem 8%; }
-  .section-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem; }
-  .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 1rem; line-height: 1.2; }
-  .section-subtitle { font-size: 1rem; color: var(--text-muted); max-width: 520px; line-height: 1.7; }
-
-  #about { background: var(--white); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-  .about-text p { color: var(--text-muted); line-height: 1.8; margin-bottom: 1rem; font-size: 0.95rem; }
-  .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
-  .tag { background: var(--blue-light); color: var(--blue); font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 100px; }
-  .about-card { background: var(--blue-pale); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); }
-  .about-card-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.25rem; }
-  .edu-item, .exp-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
-  .edu-item:last-child, .exp-item:last-child { border-bottom: none; }
-  .edu-year, .exp-period { font-size: 0.75rem; font-weight: 600; color: var(--blue); margin-bottom: 0.25rem; }
-  .edu-school, .exp-role { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
-  .edu-degree, .exp-company { font-size: 0.8rem; color: var(--text-muted); }
-
-  #tools { background: var(--white); padding: 3rem 8%; border-top: 1px solid var(--border); }
-  .tools-header { text-align: center; margin-bottom: 2.5rem; }
-  .tools-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; }
-  .tool-item {
-    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
-    background: var(--blue-pale); border: 1px solid var(--border);
-    border-radius: 14px; padding: 1.1rem 1.4rem; min-width: 90px; transition: all 0.2s;
-  }
-  .tool-item:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,79,214,0.1); }
-  .tool-item img { width: 32px; height: 32px; object-fit: contain; }
-  .tool-name { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-align: center; white-space: nowrap; }
-
-  #services { background: var(--blue-pale); }
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .service-card { background: white; border-radius: 16px; padding: 2rem; border: 1px solid var(--border); transition: all 0.25s; position: relative; overflow: hidden; }
-  .service-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--blue); transform: scaleX(0); transition: transform 0.25s; transform-origin: left; }
-  .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,79,214,0.1); }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-icon { font-size: 1.75rem; margin-bottom: 1rem; }
-  .service-title { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
-  .service-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
-  .service-list { list-style: none; margin-top: 1rem; }
-  .service-list li { font-size: 0.8rem; color: var(--text-muted); padding: 0.2rem 0; display: flex; align-items: center; gap: 0.5rem; }
-  .service-list li::before { content: "→"; color: var(--blue); font-weight: 700; font-size: 0.75rem; }
-
-  #portfolio { background: var(--white); }
-  .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .portfolio-card { border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.25s; background: white; }
-  .portfolio-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(26,79,214,0.1); }
-  .portfolio-card-header { background: var(--blue-pale); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
-  .portfolio-icon { width: 44px; height: 44px; background: var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-  .portfolio-card-title { font-size: 0.9rem; font-weight: 700; color: var(--navy); line-height: 1.3; }
-  .portfolio-card-body { padding: 1.25rem 1.5rem; }
-  .portfolio-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1rem; }
-  .portfolio-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .meta-tag { background: var(--blue-light); color: var(--blue); font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 100px; }
-
-  #contact { background: var(--navy); text-align: center; padding: 5rem 8%; }
-  #contact .section-eyebrow { color: var(--accent); }
-  #contact .section-title { color: white; }
-  #contact .section-subtitle { color: rgba(255,255,255,0.6); margin: 0 auto 2.5rem; }
-  .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-  .contact-link { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.75rem; border-radius: 100px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.2s; }
-  .contact-link.email { background: var(--blue); color: white; }
-  .contact-link.email:hover { background: var(--blue-mid); transform: translateY(-2px); }
-  .contact-link.linkedin { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
-  .contact-link.linkedin:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
-
-  footer { background: #080f1f; padding: 1.5rem 8%; text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.35); }
-
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.visible { opacity: 1; transform: none; }
-
-  @media (max-width: 768px) {
-    .hero { grid-template-columns: 1fr; padding-top: 100px; text-align: center; }
-    .hero-image { display: none; }
-    .hero-actions { justify-content: center; }
-    #about { grid-template-columns: 1fr; gap: 2rem; }
-    .services-grid { grid-template-columns: 1fr; }
-    .portfolio-grid { grid-template-columns: 1fr; }
-    nav .nav-links { display: none; }
-    .stats-bar { gap: 2rem; }
-  }
-</style>
-</head>
-<body>
-
-<nav>
-  <div class="nav-logo">Rizki<span>.</span></div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#portfolio">Portfolio</a></li>
-    <li><a href="#contact" class="nav-cta">Hire Me</a></li>
-  </ul>
-</nav>
-
-<section class="hero">
-  <div class="hero-text">
-    <div class="hero-eyebrow">Virtual Assistant & Admin Support</div>
-    <h1>Your data is a mess.<br><em>I fix that.</em></h1>
-    <p class="hero-tagline">Hi, I'm Rizki, a detail-oriented Virtual Assistant specializing in data management, email management, and administrative support. I turn disorganized data into clean, actionable deliverables.</p>
-    <div class="hero-actions">
-      <a href="#portfolio" class="btn-primary">View My Work ↓</a>
-      <a href="#contact" class="btn-secondary">Get in Touch</a>
-    </div>
-  <div class="hero-image">
-      <img src="photo.png" alt="Rizki Nur Fadilah" style="width: 280px; height: 280px; object-fit: cover; border-radius: 50%; box-shadow: 0 12px 32px rgba(15,32,68,0.15); max-width: 100%;">
-    </div>
-  <div class="stat"><div class="stat-number">5+</div><div class="stat-label">Portfolio Projects</div></div>
-  <div class="stat"><div class="stat-number">10K+</div><div class="stat-label">Rows of Data Cleaned</div></div>
-  <div class="stat"><div class="stat-number">10</div><div class="stat-label">Email Templates Built</div></div>
-  <div class="stat"><div class="stat-number">30</div><div class="stat-label">Leads Generated</div></div>
-</div>
-
-<section id="about">
-  <div class="about-text reveal">
-    <div class="section-eyebrow">About Me</div>
-    <h2 class="section-title">Organized, reliable, and detail-driven.</h2>
-    <p>I'm Rizki Nur Fadilah, a Virtual Assistant based in Indonesia with a strong focus on data management and administrative support. I help businesses stay organized by cleaning messy datasets, building clear dashboards, managing email communication, and handling day-to-day admin tasks.</p>
-    <p>My background in administrative support has sharpened my ability to communicate clearly, work independently, and deliver on time, every time.</p>
-    <div class="about-tags">
-      <span class="tag">Microsoft Excel</span>
-      <span class="tag">Data Cleaning</span>
-      <span class="tag">Dashboard Building</span>
-      <span class="tag">Email Management</span>
-      <span class="tag">Lead Generation</span>
-      <span class="tag">Business Writing</span>
-      <span class="tag">Administrative Support</span>
-    </div>
-  </div>
-  <div class="about-card reveal">
-    <div class="about-card-title">Education</div>
-    <div class="edu-item">
-      <div class="edu-year">2021 – 2025</div>
-      <div class="edu-school">Universitas Negeri Semarang</div>
-      <div class="edu-degree">Semarang, Indonesia</div>
-    </div>
-    <div style="margin-top:1.5rem" class="about-card-title">Experience</div>
-    <div class="exp-item">
-      <div class="exp-period">Feb 2024 – Jun 2024</div>
-      <div class="exp-role">Administrative Intern</div>
-      <div class="exp-company">Bawaslu of Central Java Province</div>
-    </div>
-  </div>
-<section id="tools">
-    <div class="tools-header reveal">
-      <div class="section-eyebrow">Tools & Tech</div>
-    </div>
-    <div class="tools-grid reveal">
-      <div class="tool-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/excel/excel-original.svg" alt="Microsoft Excel">
-        <div class="tool-name">Excel</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://img.icons8.com/color/48/microsoft-word-2019.png" alt="Microsoft Word">
-        <div class="tool-name">Word</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://img.icons8.com/color/48/microsoft-powerpoint-2019.png" alt="PowerPoint">
-        <div class="tool-name">PowerPoint</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://img.icons8.com/color/48/microsoft-teams.png" alt="Microsoft Teams">
-        <div class="tool-name">Teams</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive">
-        <div class="tool-name">Google Drive</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Google Calendar">
-        <div class="tool-name">Google Calendar</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Google_Meet_icon_%282020%29.svg" alt="Google Meet">
-        <div class="tool-name">Google Meet</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Zoom_Logo_2022.svg" alt="Zoom">
-        <div class="tool-name">Zoom</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg" alt="Slack">
-        <div class="tool-name">Slack</div>
-      </div>
-      <div class="tool-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Gmail">
-        <div class="tool-name">Gmail</div>
-      </div>
-    </div>
-  </section>
-    <div class="tool-item">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg" alt="Slack">
-      <div class="tool-name">Slack</div>
-    </div>
-    <div class="tool-item">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Gmail">
-      <div class="tool-name">Gmail</div>
-    </div>
-  </div>
-</section>
-
-<section id="services">
-  <div class="reveal">
-    <div class="section-eyebrow">What I Do</div>
-    <h2 class="section-title">Services I Offer</h2>
-    <p class="section-subtitle">From raw data to clean deliverables, I handle the details so you can focus on what matters.</p>
-  </div>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <div class="service-icon">🗂️</div>
-      <div class="service-title">Data Management</div>
-      <div class="service-desc">Cleaning, organizing, and structuring your data so it's accurate, consistent, and ready to use.</div>
-      <ul class="service-list">
-        <li>Data cleaning and auditing</li>
-        <li>Duplicate and error removal</li>
-        <li>Data validation and formatting</li>
-        <li>Excel spreadsheet organization</li>
-      </ul>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-icon">📊</div>
-      <div class="service-title">Dashboard and Reporting</div>
-      <div class="service-desc">Turning raw numbers into clear visual reports with interactive dashboards and pivot tables.</div>
-      <ul class="service-list">
-        <li>Pivot table summaries</li>
-        <li>Interactive Excel dashboards</li>
-        <li>KPI cards and charts</li>
-        <li>Monthly and regional breakdowns</li>
-      </ul>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-icon">✉️</div>
-      <div class="service-title">Email Management</div>
-      <div class="service-desc">Professional email templates and inbox management to keep your client communication consistent.</div>
-      <ul class="service-list">
-        <li>Email template creation</li>
-        <li>Client communication drafts</li>
-        <li>Follow-up and onboarding emails</li>
-        <li>Business writing</li>
-      </ul>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-icon">🔍</div>
-      <div class="service-title">Lead Generation</div>
-      <div class="service-desc">Manual research to build targeted, verified lead lists so your outreach reaches the right people.</div>
-      <ul class="service-list">
-        <li>LinkedIn research</li>
-        <li>Contact verification</li>
-        <li>Industry and location targeting</li>
-        <li>Outreach-ready lead lists</li>
-      </ul>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-icon">📋</div>
-      <div class="service-title">Administrative Support</div>
-      <div class="service-desc">Reliable day-to-day admin tasks to keep your operations running smoothly and on schedule.</div>
-      <ul class="service-list">
-        <li>Data entry and record keeping</li>
-        <li>Document preparation</li>
-        <li>File organization</li>
-        <li>Task and schedule coordination</li>
-      </ul>
-    </div>
-    <div class="service-card reveal">
-      <div class="service-icon">📝</div>
-      <div class="service-title">Internet Research</div>
-      <div class="service-desc">Thorough online research to gather accurate, relevant information for your business decisions.</div>
-      <ul class="service-list">
-        <li>Company and market research</li>
-        <li>Competitor analysis support</li>
-        <li>Data sourcing and compilation</li>
-        <li>Fact verification</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section id="portfolio">
-  <div class="reveal">
-    <div class="section-eyebrow">My Work</div>
-    <h2 class="section-title">Portfolio Projects</h2>
-    <p class="section-subtitle">Real deliverables built to demonstrate the work I do for clients, from messy data to polished outputs.</p>
-  </div>
-  <div class="portfolio-grid">
-    <div class="portfolio-card reveal">
-      <div class="portfolio-card-header">
-        <div class="portfolio-icon">🧹</div>
-        <div class="portfolio-card-title">Customer Data Cleaning and Audit</div>
-      </div>
-      <div class="portfolio-card-body">
-        <p class="portfolio-card-desc">Cleaned a 1,000-row customer dataset from a corrupted CSV. Ran a 6-point audit, standardized website URLs using SUBSTITUTE formula, and flagged 272 non-standard country values against ISO 3166-1.</p>
-        <div class="portfolio-meta">
-          <span class="meta-tag">Excel</span><span class="meta-tag">Data Cleaning</span>
-          <span class="meta-tag">Data Audit</span><span class="meta-tag">1,000 Rows</span>
-        </div>
-      </div>
-    </div>
-    <div class="portfolio-card reveal">
-      <div class="portfolio-card-header">
-        <div class="portfolio-icon">📈</div>
-        <div class="portfolio-card-title">Sales Data Organization and Dashboard</div>
-      </div>
-      <div class="portfolio-card-body">
-        <p class="portfolio-card-desc">Organized a 1,000-row sales dataset, standardized number formatting, built pivot tables by region, rep, and category. Delivered an interactive dashboard with $5.02M total revenue and 4 dynamic slicers.</p>
-        <div class="portfolio-meta">
-          <span class="meta-tag">Excel</span><span class="meta-tag">Pivot Tables</span>
-          <span class="meta-tag">Dashboard</span><span class="meta-tag">1,000 Rows</span>
-        </div>
-      </div>
-    </div>
-    <div class="portfolio-card reveal">
-      <div class="portfolio-card-header">
-        <div class="portfolio-icon">👥</div>
-        <div class="portfolio-card-title">HR Employee Dashboard</div>
-      </div>
-      <div class="portfolio-card-body">
-        <p class="portfolio-card-desc">Cleaned and audited a 3,400-row HR dataset across 20 columns. Built an interactive orange-themed dashboard with 5 KPI cards, 6 pivot charts, and 3 slicers for Department, Gender, and Job Role.</p>
-        <div class="portfolio-meta">
-          <span class="meta-tag">Excel</span><span class="meta-tag">Data Cleaning</span>
-          <span class="meta-tag">Dashboard</span><span class="meta-tag">3,400 Rows</span>
-        </div>
-      </div>
-    </div>
-    <div class="portfolio-card reveal">
-      <div class="portfolio-card-header">
-        <div class="portfolio-icon">✉️</div>
-        <div class="portfolio-card-title">Professional Email Template Collection</div>
-      </div>
-      <div class="portfolio-card-body">
-        <p class="portfolio-card-desc">Created 10 professional email templates for Nova Digital covering the full client lifecycle, from onboarding and kickoff to weekly reports, invoicing, proposals, revisions, and project completion.</p>
-        <div class="portfolio-meta">
-          <span class="meta-tag">Email Management</span>
-          <span class="meta-tag">Business Writing</span><span class="meta-tag">10 Templates</span>
-        </div>
-      </div>
-    </div>
-    <div class="portfolio-card reveal">
-      <div class="portfolio-card-header">
-        <div class="portfolio-icon">🎯</div>
-        <div class="portfolio-card-title">Lead Generation — SaaS Startups</div>
-      </div>
-      <div class="portfolio-card-body">
-        <p class="portfolio-card-desc">Manually researched and compiled 30 verified US-based SaaS Founder/CEO leads for GrowthBridge Consulting via LinkedIn, company websites, and Topstartups.io. Includes emails, LinkedIn URLs, and company details.</p>
-        <div class="portfolio-meta">
-          <span class="meta-tag">Lead Generation</span>
-          <span class="meta-tag">Internet Research</span><span class="meta-tag">30 Leads</span>
-        </div>
-      </div>
-    </div>
-    <div class="portfolio-card reveal" style="border: 2px dashed var(--border); background: var(--blue-pale); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:200px;">
-      <div style="font-size:2rem; margin-bottom:0.75rem;">🚀</div>
-      <div style="font-weight:700; color:var(--navy); margin-bottom:0.4rem;">More Coming Soon</div>
-      <div style="font-size:0.82rem; color:var(--text-muted);">New projects are in progress and will be added here shortly.</div>
-    </div>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="reveal">
-    <div class="section-eyebrow">Get In Touch</div>
-    <h2 class="section-title">Let's work together.</h2>
-    <p class="section-subtitle">Have a project in mind or need help with your data and admin tasks? I'd love to hear from you.</p>
-    <div class="contact-links">
-      <a href="mailto:rizkifadilah732003@gmail.com" class="contact-link email">✉️ rizkifadilah732003@gmail.com</a>
-      <a href="https://linkedin.com/in/rizki-fadilah-" target="_blank" class="contact-link linkedin">💼 LinkedIn Profile</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <p>© 2026 Rizki Nur Fadilah · Virtual Assistant & Administrative Support · Indonesia</p>
-</footer>
-
-<script>
-  const reveals = document.querySelectorAll(".reveal");
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
-  }, { threshold: 0.1 });
-  reveals.forEach(r => observer.observe(r));
-</script>
-</body>
-</html>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rizki Nur Fadilah — Virtual Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&family=Lora:ital,wght=0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0f2044;
+      --blue: #1a4fd6;
+      --blue-mid: #2d6be4;
+      --blue-light: #e8f0fd;
+      --blue-pale: #f4f7fe;
+      --accent: #4f8ef7;
+      --white: #ffffff;
+      --text: #1a2340;
+      --text-muted: #5a6a8a;
+      --border: #dce6f7;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Plus Jakarta Sans", sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
+    
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 64px; background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--blue); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta { background: var(--blue); color: white !important; padding: 0.5rem 1.25rem; border-radius: 100px; font-weight: 600 !important; }
+    .nav-cta:hover { background: var(--navy) !important; }
+    
+    .hero {
+      min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; padding: 80px 8% 0; background: var(--blue-pale);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ""; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%); pointer-events: none;
+    }
+    .hero-text { padding-right: 2rem; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue-light);
+      color: var(--blue); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before { content: ""; width: 6px; height: 6px; background: var(--blue); border-radius: 50%; }
+    .hero h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: var(--navy); margin-bottom: 0.75rem; }
+    .hero h1 em { font-family: "Lora", serif; font-style: italic; color: var(--blue); font-weight: 400; }
+    .hero-tagline { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 420px; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue); color: white;
+      padding: 0.85rem 1.75rem; border-radius: 100px; font-weight: 700; font-size: 0.9rem;
+      text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 20px rgba(26,79,214,0.3);
+    }
+    .btn-primary:hover { background: var(--navy); transform: translateY(-2px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--navy);
+      padding: 0.85rem 1.75rem; border-radius: 100px; font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; border: 2px solid var(--border); transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+    
+    .hero-image { display: flex; justify-content: center; align-items: center; }
+    .hero-image img {
+      width: 280px; height: 280px; object-fit: cover; border-radius: 50%;
+      filter: drop-shadow(0 12px 32px rgba(15,32,68,0.15)); max-width: 100%;
+    }
+    
+    .stats-bar { background: var(--navy); padding: 1.5rem 8%; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+    .stat { text-align: center; color: white; }
+    .stat-number { font-size: 1.6rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+    .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
+    
+    section { padding: 5rem 8%; }
+    .section-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 1rem; line-height: 1.2; }
+    .section-subtitle { font-size: 1rem; color: var(--text-muted); max-width: 520px; line-height: 1.7; }
+    
+    #about { background: var(--white); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about-text p { color: var(--text-muted); line-height: 1.8; margin-bottom: 1rem; font-size: 0.95rem; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .tag { background: var(--blue-light); color: var(--blue); font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.85rem; border-radius: 100px; }
+    .about-card { background: var(--blue-pale); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); }
+    .about-card-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.25rem; }
+    .edu-item, .exp-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .edu-item:last-child, .exp-item:last-child { border-bottom: none; }
+    .edu-year, .exp-period { font-size: 0.75rem; font-weight: 600; color: var(--blue); margin-bottom: 0.25rem; }
+    .edu-school, .exp-role { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+    .edu-degree, .exp-company { font-size: 0.8rem; color: var(--text-muted); }
+    
+    #tools { background: var(--white); padding: 5rem 8%; border-top: 1px solid var(--border); }
+    .tools-header { text-align: center; margin-bottom: 2.5rem; }
+    .tools-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; }
+    .tool-item { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; background: var(--blue-pale); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.4rem; min-width: 90px; transition: all 0.2s; }
+    .tool-item:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,79,214,0.1); }
+    .tool-item img { width: 32px; height: 32px; object-fit: contain; }
+    .tool-name { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-align: center; white-space: nowrap; }
+    
+    #services { background: var(--blue-pale); }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .service-card { background: white; border-radius: 16px; padding: 2rem; border: 1px solid var(--border); transition: all 0.25s; position: relative; overflow: hidden; }
+    .service-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--blue); transform: scaleX(0); transition: transform 0.25s; transform-origin: left; }
+    .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,79,214,0.1); }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon { font-size: 1.75rem; margin-bottom: 1rem; }
+    .service-title { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+    .service-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+    .service-list { list-style: none; margin-top: 1rem; }
+    .service-list li { font-size: 0.8
