@@ -591,10 +591,16 @@
         document.getElementById('modalDesc').innerText = description;
         document.getElementById('modalLink').href = link;
         
-        // Mengubah ikon pop-up otomatis agar sesuai proyek
+        // Mengubah ikon pop-up otomatis agar pas dengan judul proyek
         const iconElement = document.getElementById('modalIcon');
         if (title.includes('Sales')) {
             iconElement.innerText = '📈';
+        } else if (title.includes('HR') || title.includes('Employee')) {
+            iconElement.innerText = '👥';
+        } else if (title.includes('Email')) {
+            iconElement.innerText = '✉️';
+        } else if (title.includes('Lead') || title.includes('Generation')) {
+            iconElement.innerText = '🔍';
         } else {
             iconElement.innerText = '🧹';
         }
@@ -606,11 +612,13 @@
         document.getElementById('projectModal').classList.remove('active');
     }
 
-    // Menutup pop-up jika user mengklik area blur di luar kotak
     window.onclick = function(event) {
         const modal = document.getElementById('projectModal');
         if (event.target == modal) {
             closeProject();
+        }
+    }
+  </script>
         }
     }
   </script>
