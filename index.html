@@ -528,5 +528,34 @@
   }, { threshold: 0.1 });
   reveals.forEach(r => observer.observe(r));
 </script>
+ <script>
+    function openProject(title, description, link) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalDesc').innerText = description;
+        document.getElementById('modalLink').href = link;
+        
+        // Mengubah ikon pop-up otomatis agar sesuai proyek
+        const iconElement = document.getElementById('modalIcon');
+        if (title.includes('Sales')) {
+            iconElement.innerText = '📈';
+        } else {
+            iconElement.innerText = '🧹';
+        }
+
+        document.getElementById('projectModal').classList.add('active');
+    }
+
+    function closeProject() {
+        document.getElementById('projectModal').classList.remove('active');
+    }
+
+    // Menutup pop-up jika user mengklik area blur di luar kotak
+    window.onclick = function(event) {
+        const modal = document.getElementById('projectModal');
+        if (event.target == modal) {
+            closeProject();
+        }
+    }
+  </script>
 </body>
 </html>
